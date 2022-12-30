@@ -12,7 +12,7 @@ class User(AbstractUser):
         verbose_name='Электронная почта',
         unique=True,
     )
-    login = CharField(
+    username = CharField(
         verbose_name='Логин',
         max_length=69,
         unique=True,

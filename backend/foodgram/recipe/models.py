@@ -1,9 +1,11 @@
 from django.contrib.auth import get_user_model
 from django.db.models.functions import Length
-from django.db.models import (CASCADE, CharField, CheckConstraint,
-                              DateTimeField, ForeignKey, ImageField,
-                              ManyToManyField, Model, IntegerField,
-                              Q, TextField, UniqueConstraint)
+from django.db.models import (
+    CASCADE, CharField, CheckConstraint,
+    DateTimeField, ForeignKey, ImageField,
+    ManyToManyField, Model, IntegerField,
+    Q, TextField, UniqueConstraint
+)
 
 CharField.register_lookup(Length)
 
@@ -55,7 +57,7 @@ class Ingredient(Model):
         verbose_name='Название',
         max_length=256,
     )
-    units = CharField(
+    measurement_unit = CharField(
         verbose_name='Единицы измерения',
         max_length=256
     )
@@ -66,7 +68,10 @@ class Ingredient(Model):
         ordering = ('name', )
         constraints = (
             UniqueConstraint(
-                fields=('name', 'units'),
+                fields=(
+                    'name',
+                    'units'
+                ),
                 name='unique_for_ingredient'
             ),
             CheckConstraint(
@@ -80,7 +85,7 @@ class Ingredient(Model):
         )
 
     def __str__(self):
-        return f'{self.name} {self.units}'
+        return f'{self.name} {self.measurement_unit}'
 
 
 class Recipe(Model):
@@ -104,7 +109,7 @@ class Recipe(Model):
         to=Ingredient,
         through='recipes.AmountIngredient',
     )
-    time_to_cook = IntegerField(
+    cooking_time = IntegerField(
         verbose_name='Время приготовления в минутах',
         default=0,
     )
@@ -126,7 +131,7 @@ class Recipe(Model):
         verbose_name='Дата публикации',
         auto_now_add=True,
     )
-    shopping_list = ManyToManyField(
+    cart = ManyToManyField(
         verbose_name='Список покупок',
         related_name='shopping_list',
         to=User,
@@ -138,7 +143,10 @@ class Recipe(Model):
         ordering = ('-pub_date', )
         constraints = (
             UniqueConstraint(
-                fields=('name', 'author'),
+                fields=(
+                    'name',
+                    'author',
+                ),
                 name='unique_for_author'
             ),
             CheckConstraint(
@@ -148,7 +156,7 @@ class Recipe(Model):
         )
 
     def __str__(self):
-        return f'{self.name}. Автор: {self.author.login}'
+        return f'{self.name}. Автор: {self.author.username}'
 
 
 class AmountIngredient(Model):
@@ -175,7 +183,10 @@ class AmountIngredient(Model):
         ordering = ('recipe', )
         constraints = (
             UniqueConstraint(
-                fields=('recipe', 'ingredients', ),
+                fields=(
+                    'recipe',
+                    'ingredients',
+                ),
                 name='\n%(app_label)s_%(class)s ingredient alredy added\n',
             ),
         )
