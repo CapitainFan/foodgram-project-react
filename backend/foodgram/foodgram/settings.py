@@ -1,4 +1,6 @@
 import os
+
+from decouple import Csv, config
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -71,8 +73,18 @@ WSGI_APPLICATION = 'foodgram.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': config(
+            'DB_ENGINE', default='django.db.backends.postgresql'),
+        'NAME': config(
+            'DB_NAME', default='postgres'),
+        'USER': config(
+            'POSTGRES_USER', default='postgres'),
+        'PASSWORD': config(
+            'POSTGRES_PASSWORD', default='password'),
+        'HOST': config(
+            'DB_HOST', default='db'),
+        'PORT': config(
+            'DB_PORT', default=5432, cast=int)
     }
 }
 
