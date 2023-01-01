@@ -1,55 +1,15 @@
-from string import hexdigits
-
 from django.contrib.auth import get_user_model
 from django.db.models import F
 from drf_extra_fields.fields import Base64ImageField
-from rest_framework.serializers import (
-    ModelSerializer, SerializerMethodField,
-    ValidationError
-)
+from recipe.models import Ingredient, Recipe, Tag
+from rest_framework.serializers import (ModelSerializer, SerializerMethodField,
+                                        ValidationError)
 
-from recipe.models import AmountIngredient, Ingredient, Recipe, Tag
-from users.models import User
-
+from foodgram.config import (MAX_USERNAME_LEN, MIN_USERNAME_LEN,
+                             check_value_validate, is_hex_color,
+                             recipe_amount_ingredients_set)
 
 User = get_user_model()
-
-
-RESTRICTED_USERNAME = 'me'
-
-
-def recipe_amount_ingredients_set(recipe, ingredients):
-    for ingredient in ingredients:
-        AmountIngredient.objects.get_or_create(
-            recipe=recipe,
-            ingredients=ingredient['ingredient'],
-            amount=ingredient['amount']
-        )
-
-
-def is_hex_color(value):
-    if len(value) not in (3, 6):
-        raise ValidationError(
-            f'{value} не правильной длины ({len(value)}).'
-        )
-    if not set(value).issubset(hexdigits):
-        raise ValidationError(
-            f'{value} не шестнадцатиричное.'
-        )
-
-
-def check_value_validate(value, klass=None):
-    if not str(value).isdecimal():
-        raise ValidationError(
-            f'{value} должно содержать цифру'
-        )
-    if klass:
-        obj = klass.objects.filter(id=value)
-        if not obj:
-            raise ValidationError(
-                f'{value} не существует'
-            )
-        return obj[0]
 
 
 class ShortRecipeSerializer(ModelSerializer):
@@ -75,9 +35,9 @@ class TagSerializer(ModelSerializer):
     class Meta:
         model = Tag
         fields = '__all__'
-        read_only_fields = '__all__',
+        read_only_fields = '__all__'
 
-    def checking_color(self,color):
+    def checking_color(self, color):
         color = str(color).strip(' #')
         is_hex_color(color)
         return f'#{color}'
@@ -143,9 +103,13 @@ class UserSerializer(ModelSerializer):
         return user
 
     def validate_username(self, username):
-        if len(username) < 3:
+        if (
+            len(username) < MIN_USERNAME_LEN or
+            len(username) > MAX_USERNAME_LEN
+        ):
             raise ValidationError(
-                f'{3} до {30}'
+                f'''Длинна логина должна быть от
+                 {MIN_USERNAME_LEN} до {MAX_USERNAME_LEN} символов'''
             )
         return username.capitalize()
 

@@ -1,13 +1,10 @@
-django==2.2.16
 django-extensions==3.1.5
 django-filter==21.1
 djangorestframework==3.13.1
-djangorestframework-simplejwt==5.2.0
 djoser==2.1.0
+python-decouple==3.5
 drf-extra-fields==3.2.1
 gunicorn==20.1.0
 Pillow==9.3.0
-PyJWT==2.1.0
-python-decouple==3.5
 psycopg2-binary==2.9.3
-requests==2.26.0
+isort==5.11.4

@@ -1,26 +1,22 @@
 from urllib.parse import unquote
+
 from django.contrib.auth import get_user_model
 from djoser.views import UserViewSet as DjoserUserViewSet
+from recipe.models import Ingredient, Recipe, Tag
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.status import HTTP_401_UNAUTHORIZED
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
-from recipe.models import Ingredient, Recipe, Tag
+from foodgram.config import (ACTION_METHODS, SYMBOL_FALSE_SEARCH,
+                             SYMBOL_TRUE_SEARCH, TRANSLATER_DICT)
 
 from .mixins import AddDelViewMixin
 from .paginators import PageLimitPagination
 from .permissions import AdminOrReadOnly, AuthorStaffOrReadOnly
-from .serializers import (
-    IngredientSerializer, RecipeSerializer,
-    ShortRecipeSerializer, TagSerializer,
-    UserSubscribeSerializer
-)
-
-translater_dict = str.maketrans(
-    'qwertyuiop[]asdfghjkl;\'zxcvbnm,./',
-    'йцукенгшщзхъфывапролджэячсмитьбю.'
-)
+from .serializers import (IngredientSerializer, RecipeSerializer,
+                          ShortRecipeSerializer, TagSerializer,
+                          UserSubscribeSerializer)
 
 User = get_user_model()
 
@@ -43,7 +39,7 @@ class IngredientViewSet(ReadOnlyModelViewSet):
             if name[0] == '%':
                 name = unquote(name)
             else:
-                name = name.translate(translater_dict)
+                name = name.translate(TRANSLATER_DICT)
             name = name.lower()
             stw_queryset = list(queryset.filter(name__startswith=name))
             cnt_queryset = queryset.filter(name__contains=name)
@@ -58,14 +54,7 @@ class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
     pagination_class = PageLimitPagination
     add_serializer = UserSubscribeSerializer
 
-    @action(
-        methods=(
-            'get',
-            'post',
-            'delete',
-        ),
-        detail=True,
-    )
+    @action(methods=ACTION_METHODS, detail=True,)
     def subscribe(self, request, id):
         return self.add_del_obj(id, 'subscribe')
 
@@ -89,25 +78,11 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
     pagination_class = PageLimitPagination
     add_serializer = ShortRecipeSerializer
 
-    @action(
-        methods=(
-            'get',
-            'post',
-            'delete',
-        ),
-        detail=True,
-    )
+    @action(methods=ACTION_METHODS, detail=True,)
     def favorite(self, request, pk):
         return self.add_del_obj(pk, 'favorite')
 
-    @action(
-        methods=(
-            'get',
-            'post',
-            'delete',
-        ),
-        detail=True,
-    )
+    @action(methods=ACTION_METHODS, detail=True,)
     def shopping_cart(self, request, pk):
         return self.add_del_obj(pk, 'shopping_cart')
 
@@ -128,14 +103,14 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
         if author:
             queryset = queryset.filter(author=author)
 
-        if is_in_shopping in ('1', 'true',):
+        if is_in_shopping in SYMBOL_TRUE_SEARCH:
             queryset = queryset.filter(cart=user.id)
-        elif is_in_shopping in ('0', 'false',):
+        elif is_in_shopping in SYMBOL_FALSE_SEARCH:
             queryset = queryset.exclude(cart=user.id)
 
-        if is_favorited in ('1', 'true',):
+        if is_favorited in SYMBOL_TRUE_SEARCH:
             queryset = queryset.filter(favorite=user.id)
-        elif is_favorited in ('0', 'false',):
+        elif is_favorited in SYMBOL_FALSE_SEARCH:
             queryset = queryset.exclude(favorite=user.id)
 
         return queryset

@@ -1,11 +1,14 @@
 from django.contrib.auth import get_user_model
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db.models import (CASCADE, CharField, CheckConstraint,
+                              DateTimeField, ForeignKey, ImageField,
+                              ManyToManyField, Model,
+                              PositiveSmallIntegerField, Q, TextField,
+                              UniqueConstraint)
 from django.db.models.functions import Length
-from django.db.models import (
-    CASCADE, CharField, CheckConstraint,
-    DateTimeField, ForeignKey, ImageField,
-    ManyToManyField, Model, IntegerField,
-    Q, TextField, UniqueConstraint
-)
+
+from foodgram.config import (LEN_HEX_COLOR, MAX_LEN_RECIPES_CHARFIELD,
+                             MAX_LEN_RECIPES_TEXTFIELD)
 
 CharField.register_lookup(Length)
 
@@ -14,18 +17,20 @@ User = get_user_model()
 
 class Tag(Model):
     name = CharField(
-        verbose_name='Название',
-        max_length=100,
+        verbose_name='Название тега',
+        max_length=MAX_LEN_RECIPES_CHARFIELD,
         unique=True,
     )
     color = CharField(
-        max_length=6,
+        verbose_name='Цветовой HEX-код',
+        max_length=LEN_HEX_COLOR,
         blank=True,
         null=True,
         default="#ffffff",
     )
     slug = CharField(
-        max_length=50,
+        verbose_name='Слаг тега',
+        max_length=MAX_LEN_RECIPES_CHARFIELD,
         unique=True,
     )
 
@@ -54,12 +59,12 @@ class Tag(Model):
 
 class Ingredient(Model):
     name = CharField(
-        verbose_name='Название',
-        max_length=256,
+        verbose_name='Название ингридиента',
+        max_length=MAX_LEN_RECIPES_CHARFIELD,
     )
     measurement_unit = CharField(
-        verbose_name='Единицы измерения',
-        max_length=256
+        verbose_name='Единицы измерения ингридиента',
+        max_length=MAX_LEN_RECIPES_CHARFIELD,
     )
 
     class Meta:
@@ -90,14 +95,14 @@ class Ingredient(Model):
 
 class Recipe(Model):
     author = ForeignKey(
-        verbose_name='Автор',
+        verbose_name='Автор рецепта',
         related_name='recipes',
         to=User,
         on_delete=CASCADE,
     )
     name = CharField(
-        verbose_name='Название',
-        max_length=256,
+        verbose_name='Название рецепта',
+        max_length=MAX_LEN_RECIPES_CHARFIELD,
     )
     image = ImageField(
         verbose_name='Картинка',
@@ -109,13 +114,23 @@ class Recipe(Model):
         to=Ingredient,
         through='recipes.AmountIngredient',
     )
-    cooking_time = IntegerField(
+    cooking_time = PositiveSmallIntegerField(
         verbose_name='Время приготовления в минутах',
         default=0,
+        validators=(
+            MaxValueValidator(
+                1,
+                'Блюдо не надо готовить',
+            ),
+            MinValueValidator(
+                600,
+                'Блюдо слишком долго готовится',
+            ),
+        ),
     )
     text = TextField(
         verbose_name='Описание',
-        max_length=1000,
+        max_length=MAX_LEN_RECIPES_TEXTFIELD,
     )
     favorite = ManyToManyField(
         verbose_name='Понравившиеся рецепты',
@@ -172,9 +187,19 @@ class AmountIngredient(Model):
         to=Ingredient,
         on_delete=CASCADE,
     )
-    amount = IntegerField(
+    amount = PositiveSmallIntegerField(
         verbose_name='Количество',
         default=0,
+        validators=(
+            MaxValueValidator(
+                1,
+                'Слишком мало',
+            ),
+            MinValueValidator(
+                10000,
+                'Слишком много',
+            ),
+        ),
     )
 
     class Meta:

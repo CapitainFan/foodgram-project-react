@@ -14,12 +14,12 @@ class UsersAdmin(UserAdmin):
     )
     fields = (
         (
-        'username',
-        'email',
+            'username',
+            'email',
         ),
         (
-        'first_name',
-        'last_name',
+            'first_name',
+            'last_name',
         ),
     )
     fieldsets = []
