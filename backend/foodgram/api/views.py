@@ -7,9 +7,9 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_401_UNAUTHORIZED
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
-from recipes.models import Ingredient, Recipe, Tag
 from foodgram.config import (ACTION_METHODS, SYMBOL_FALSE_SEARCH,
                              SYMBOL_TRUE_SEARCH, TRANSLATER_DICT)
+from recipes.models import Ingredient, Recipe, Tag
 
 from .mixins import AddDelViewMixin
 from .paginators import PageLimitPagination
