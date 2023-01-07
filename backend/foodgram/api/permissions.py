@@ -18,3 +18,12 @@ class AdminOrReadOnly(BasePermission):
             or request.user.is_authenticated
             and request.user.is_admin
         )
+
+
+class OwnerUserOrReadOnly(IsAuthenticatedOrReadOnly):
+    def has_object_permission(self, request, view, obj):
+        return (
+            request.method in ('GET',)
+            or (request.user == obj)
+            or request.user.is_admin
+        )

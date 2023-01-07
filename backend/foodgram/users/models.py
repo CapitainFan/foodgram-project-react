@@ -8,6 +8,8 @@ from foodgram.config import (MAX_LEN_EMAIL_FIELD, MAX_LEN_USERS_CHARFIELD,
                              MIN_USERNAME_LEN, USERS_HELP_EMAIL,
                              USERS_HELP_FNAME, USERS_HELP_UNAME)
 
+from .valid import MinLenValidator, OneOfTwoValidator
+
 CharField.register_lookup(Length)
 
 
@@ -23,6 +25,10 @@ class User(AbstractUser):
         max_length=MAX_LEN_USERS_CHARFIELD,
         help_text=USERS_HELP_UNAME,
         unique=True,
+        validators=(
+            MinLenValidator(min_len=MIN_USERNAME_LEN),
+            OneOfTwoValidator(),
+        ),
     )
     first_name = CharField(
         verbose_name='Имя',

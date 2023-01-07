@@ -1,13 +1,13 @@
 from django.contrib.auth import get_user_model
 from django.db.models import F
 from drf_extra_fields.fields import Base64ImageField
-from recipe.models import Ingredient, Recipe, Tag
 from rest_framework.serializers import (ModelSerializer, SerializerMethodField,
                                         ValidationError)
 
-from foodgram.config import (MAX_USERNAME_LEN, MIN_USERNAME_LEN,
-                             check_value_validate, is_hex_color,
-                             recipe_amount_ingredients_set)
+from recipes.models import Ingredient, Recipe, Tag
+from foodgram.config import MAX_USERNAME_LEN, MIN_USERNAME_LEN
+from foodgram.func import (check_value_validate, is_hex_color,
+                           recipe_amount_ingredients_set)
 
 User = get_user_model()
 
@@ -103,13 +103,14 @@ class UserSerializer(ModelSerializer):
         return user
 
     def validate_username(self, username):
-        if (
-            len(username) < MIN_USERNAME_LEN or
-            len(username) > MAX_USERNAME_LEN
-        ):
+        if len(username) < MIN_USERNAME_LEN:
             raise ValidationError(
-                f'''Длинна логина должна быть от
-                 {MIN_USERNAME_LEN} до {MAX_USERNAME_LEN} символов'''
+                'Длина username допустима от '
+                f'{MIN_USERNAME_LEN} до {MAX_USERNAME_LEN}'
+            )
+        if not username.isalpha():
+            raise ValidationError(
+                'В username допустимы только буквы.'
             )
         return username.capitalize()
 

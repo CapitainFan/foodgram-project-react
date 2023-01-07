@@ -2,12 +2,12 @@ from urllib.parse import unquote
 
 from django.contrib.auth import get_user_model
 from djoser.views import UserViewSet as DjoserUserViewSet
-from recipe.models import Ingredient, Recipe, Tag
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.status import HTTP_401_UNAUTHORIZED
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
+from recipes.models import Ingredient, Recipe, Tag
 from foodgram.config import (ACTION_METHODS, SYMBOL_FALSE_SEARCH,
                              SYMBOL_TRUE_SEARCH, TRANSLATER_DICT)
 
