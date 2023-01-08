@@ -1,15 +1,19 @@
+from datetime import datetime as dt
 from urllib.parse import unquote
 
 from django.contrib.auth import get_user_model
+from django.db.models import F, Sum
+from django.http.response import HttpResponse
 from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.status import HTTP_401_UNAUTHORIZED
+from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
-from foodgram.config import (ACTION_METHODS, SYMBOL_FALSE_SEARCH,
-                             SYMBOL_TRUE_SEARCH, TRANSLATER_DICT)
-from recipes.models import Ingredient, Recipe, Tag
+from foodgram.config import (ACTION_METHODS, DATE_TIME_FORMAT,
+                             SYMBOL_FALSE_SEARCH, SYMBOL_TRUE_SEARCH,
+                             TRANSLATER_DICT)
+from recipes.models import AmountIngredient, Ingredient, Recipe, Tag
 
 from .mixins import AddDelViewMixin
 from .paginators import PageLimitPagination
@@ -114,3 +118,33 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
             queryset = queryset.exclude(favorite=user.id)
 
         return queryset
+
+    @action(methods=('get',), detail=False)
+    def download_shopping_cart(self, request):
+        user = self.request.user
+        if not user.carts.exists():
+            return Response(status=HTTP_400_BAD_REQUEST)
+        ingredients = AmountIngredient.objects.filter(
+            recipe__in=(user.carts.values('id'))
+        ).values(
+            ingredient=F('ingredients__name'),
+            measure=F('ingredients__measurement_unit')
+        ).annotate(amount=Sum('amount'))
+
+        filename = f'{user.username}_shopping_list.txt'
+        shopping_list = (
+            f'Список покупок для:\n\n{user.first_name}\n\n'
+            f'{dt.now().strftime(DATE_TIME_FORMAT)}\n\n'
+        )
+        for ing in ingredients:
+            shopping_list += (
+                f'{ing["ingredient"]}: {ing["amount"]} {ing["measure"]}\n'
+            )
+
+        shopping_list += '\n\nПосчитано в Foodgram'
+
+        response = HttpResponse(
+            shopping_list, content_type='text.txt; charset=utf-8'
+        )
+        response['Content-Disposition'] = f'attachment; filename={filename}'
+        return response
