@@ -1,19 +1,36 @@
+import json
+import os
+
+from django.conf import settings
+from django.core.management.base import BaseCommand, CommandError
+from django.db.utils import IntegrityError
+
 from recipes.models import Ingredient
-import csv
+
+DATA_ROOT = os.path.join(settings.BASE_DIR, 'data')
 
 
-def run():
-    with open('recipes/ingredients.csv') as file:
-        reader = csv.reader(file)
-        next(reader)
+class Command(BaseCommand):
+    help = 'loading ingredients from data in json'
 
-        for row in reader:
-            print(row)
+    def add_arguments(self, parser):
+        parser.add_argument('filename', default='ingredients.json', nargs='?',
+                            type=str)
 
-            name, measurement_unit = Ingredient.objects.get_or_create(name=row)
+    def handle(self, *args, **options):
+        try:
+            with open(os.path.join(DATA_ROOT, options['filename']), 'r',
+                      encoding='utf-8') as f:
+                data = json.load(f)
+                for ingredient in data:
+                    try:
+                        Ingredient.objects.create(name=ingredient["name"],
+                                                  measurement_unit=ingredient[
+                                                      "measurement_unit"])
+                    except IntegrityError:
+                        print(f'Ингридиет {ingredient["name"]} '
+                              f'{ingredient["measurement_unit"]} '
+                              f'уже есть в базе')
 
-            ingredient = Ingredient(
-                name=name,
-                measurement_unit=measurement_unit
-            )
-            ingredient.save()
+        except FileNotFoundError:
+            raise CommandError('Файл отсутствует в директории data')

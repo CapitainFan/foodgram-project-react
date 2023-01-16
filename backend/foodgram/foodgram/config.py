@@ -1,18 +1,11 @@
-RESTRICTED_USERNAME = 'me'
-
 DATE_TIME_FORMAT = '%d/%m/%Y %H:%M'
 
 MIN_USERNAME_LEN = 3
 MAX_USERNAME_LEN = 50
 
-TRANSLATER_DICT = str.maketrans(
-    'qwertyuiop[]asdfghjkl;\'zxcvbnm,./',
-    'йцукенгшщзхъфывапролджэячсмитьбю.'
-)
-
-ADD_METHODS = ('GET', 'POST',)
+ADD_GET_METHODS = ('GET', 'POST',)
 DEL_METHODS = ('DELETE',)
-ACTION_METHODS = [i.lower() for i in (ADD_METHODS + DEL_METHODS)]
+ACTION_METHODS = [i.lower() for i in (ADD_GET_METHODS + DEL_METHODS)]
 UPDATE_METHODS = ('PUT', 'PATCH')
 
 SYMBOL_TRUE_SEARCH = ('1', 'true',)

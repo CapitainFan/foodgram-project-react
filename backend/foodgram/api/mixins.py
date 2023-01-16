@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.status import (HTTP_201_CREATED, HTTP_204_NO_CONTENT,
                                    HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED)
 
-from foodgram.config import ADD_METHODS, DEL_METHODS
+from foodgram.config import ADD_GET_METHODS, DEL_METHODS
 
 
 class AddDelViewMixin:
@@ -32,7 +32,7 @@ class AddDelViewMixin:
         )
         obj_exist = meneger.filter(id=obj_id).exists()
 
-        if (self.request.method in ADD_METHODS) and not obj_exist:
+        if (self.request.method in ADD_GET_METHODS) and not obj_exist:
             meneger.add(obj)
             return Response(serializer.data, status=HTTP_201_CREATED)
 
