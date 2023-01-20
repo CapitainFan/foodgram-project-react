@@ -118,7 +118,7 @@ http://localhost/api/recipes/
 http://localhost/api/recipes/{id}/
 ```
 
-- Удаление рецепта
+- Скачать список покупок
 ```
 http://localhost/api/recipes/download_shopping_cart/
 ```
