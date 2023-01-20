@@ -6,7 +6,6 @@ from django.db.models import (CASCADE, CharField, CheckConstraint,
                               PositiveSmallIntegerField, Q, TextField,
                               UniqueConstraint)
 from django.db.models.functions import Length
-
 from foodgram.config import (MAX_LEN_RECIPES_CHARFIELD,
                              MAX_LEN_RECIPES_TEXTFIELD)
 

@@ -3,7 +3,6 @@ from django.db.models import (CharField, CheckConstraint, EmailField,
                               ManyToManyField, Q)
 from django.db.models.functions import Length
 from django.utils.translation import gettext_lazy as _
-
 from foodgram.config import (MAX_LEN_EMAIL_FIELD, MAX_LEN_USERS_CHARFIELD,
                              MIN_USERNAME_LEN, USERS_HELP_EMAIL,
                              USERS_HELP_FNAME, USERS_HELP_UNAME)
