@@ -21,53 +21,50 @@
 - Gunicorn - https://docs.gunicorn.org/
 
 
-### Как установить проект:
-Клонировать репозиторий и перейти в него в командной строке:
+### To deploy this project need the next actions:
+- Download project with SSH (actually you only need the folder 'infra/')
+```
+git@github.com:Xewus/foodgram-project-react.git
+```
+- Connect to your server:
+```
+ssh <server user>@<server IP>
+```
+- Install Docker on your server
+```
+sudo apt install docker.io
+```
+- Install Docker Compose (for Linux)
+```
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+```
+- Create project directory (preferably in your home directory)
+```
+mkdir foodgram && cd foodgram/
+```
+- Create env-file:
+```
+touch .env
+```
+- Fill in the env-file like it:
+```
+DEBUG=False
+SECRET_KEY=<Your_some_long_string>
+ALLOWED_HOSTS='localhost, 127.0.0.1, <Your_host>'
+CSRF_TRUSTED_ORIGINS='http://localhost, http://127.0.0.1, http://<Your_host>'
+DB_ENGINE='django.db.backends.postgresql'
+DB_NAME='postgres'
+POSTGRES_USER='postgres'
+POSTGRES_PASSWORD=<Your_password>
+DB_HOST='db'
+DB_PORT=5432
+```
+- Copy files from 'infra/' (on your local machine) to your server
 
+- Run docker-compose
 ```
-git@github.com:CapitainFan/foodgram-project-react.git
+sudo docker-compose up -d
 ```
-
-
-### Как запустить проект:
-
-Переходим в нужную дерикторию:
-```
-cd foodgram-project-react
-```
-
-Поднимаем контейнеры :
-```
-docker-compose up -d --build
-```
-
-Выполняем миграции:
-
-```
-docker-compose exec web python manage.py migrate
-```
-
-Создаем суперпользователя:
-```
-docker-compose exec web python manage.py createsuperuser
-```
-
-Србираем статику:
-```
-docker-compose exec web python manage.py collectstatic --no-input
-```
-
-Создаем резервную копию:
-```
-docker-compose exec web python manage.py dumpdata > dumpPostrgeSQL.json
-```
-
-
-### Останостановить контейнеры:
-```
-docker-compose down -v
-```
-
 
 ### Примеры запросов
 
