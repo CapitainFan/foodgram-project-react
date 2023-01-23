@@ -82,7 +82,7 @@ jobs:
         host: ${{ secrets.HOST_IP }}
         username: ${{ secrets.HOST_USER }}
         key: ${{ secrets.SSH_KEY }}
-	passphrase: ${{ secrets.PASSPHRASE }}
+        passphrase: ${{ secrets.PASSPHRASE }}
         script: |
           cd projects/foodgram/
           sudo docker pull ${{ secrets.DOCKER_USER }}/foodgram_front
