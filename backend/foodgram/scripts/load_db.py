@@ -14,7 +14,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            'filename', 
+            'filename',
             default='ingredients.json',
             nargs='?',
             type=str,
