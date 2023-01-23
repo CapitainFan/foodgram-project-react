@@ -21,10 +21,14 @@
 - Gunicorn - https://docs.gunicorn.org/
 
 
+### Ссылка на мой проект
+http://textyourrecipe.sytes.net/
+
+
 ### To deploy this project need the next actions:
-- Download project with SSH (actually you only need the folder 'infra/')
+- Download project with SSH
 ```
-git@github.com:Xewus/foodgram-project-react.git
+git clone git@github.com:CapitainFan/foodgram-project-react.git
 ```
 - Connect to your server:
 ```
