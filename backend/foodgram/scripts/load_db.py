@@ -38,4 +38,3 @@ class Command(BaseCommand):
 
         except FileNotFoundError:
             raise CommandError('Файл отсутствует в директории data')
-
