@@ -52,7 +52,7 @@ touch .env
 ```
 - Fill in the env-file like it:
 ```
-DEBUG=False
+DEBUG=False(True если тестовый вариант и надо отслеживать ошибки)
 SECRET_KEY=<Your_some_long_string>
 ALLOWED_HOSTS='localhost, 127.0.0.1, <Your_host>'
 CSRF_TRUSTED_ORIGINS='http://localhost, http://127.0.0.1, http://<Your_host>'
