@@ -196,7 +196,7 @@ class RecipeSerializer(ModelSerializer):
         recipe.image = validated_data.get('image', recipe.image)
         recipe.name = validated_data.get('name', recipe.name)
         recipe.text = validated_data.get('text', recipe.text)
-        recipe.cooking_time = validated_data.get('cooking_time', 
+        recipe.cooking_time = validated_data.get('cooking_time',
 						 recipe.cooking_time,)
 
         if tags:

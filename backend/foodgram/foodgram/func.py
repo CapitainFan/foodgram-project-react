@@ -37,4 +37,3 @@ def check_value_validate(value, klass=None):
             )
         return obj[0]
     return False
-
