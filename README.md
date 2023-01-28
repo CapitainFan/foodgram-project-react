@@ -19,7 +19,6 @@
 
 - Gunicorn - https://docs.gunicorn.org/
 
-
 ### Ссылка на мой проект
 http://textyourrecipe.sytes.net/
 
