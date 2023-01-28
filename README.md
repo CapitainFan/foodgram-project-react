@@ -155,5 +155,6 @@ http://localhost/api/ingredients/
 http://localhost/api/ingredients/{id}/
 ```
 
+
 ### Авторы
 Богдан Сокольников.
