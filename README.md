@@ -20,7 +20,7 @@
 - Gunicorn - https://docs.gunicorn.org/
 
 ### Ссылка на мой проект
-http://textyourrecipe.sytes.net/
+http://textyourrecipe.sytes.net:8001/
 
 
 ### To deploy this project need the next actions:
