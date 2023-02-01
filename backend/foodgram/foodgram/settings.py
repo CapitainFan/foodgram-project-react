@@ -1,37 +1,24 @@
 from pathlib import Path
 
-from decouple import Csv, config
-
-REVIEW = 0
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import os
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = False
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = config('SECRET_KEY', default='string_from_.env')
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
-
-CSRF_TRUSTED_ORIGINS = config(
-    'CSRF_TRUSTED_ORIGINS',
-    default='http://localhost http://127.0.0.1',
-    cast=Csv()
-)
+ALLOWED_HOSTS = ['*']
 
 ROOT_URLCONF = 'foodgram.urls'
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
-# Application definition
 
 INSTALLED_APPS = [
+    'api',
+    'users',
+    'recipes',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,9 +29,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'djoser',
     'django_filters',
-    'api.apps.ApiConfig',
-    'recipes.apps.RecipesConfig',
-    'users.apps.UsersConfig',
+    'corsheaders',
     'django_extensions',
 ]
 
@@ -58,6 +43,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 TEMPLATES = [
     {
@@ -75,20 +61,15 @@ TEMPLATES = [
     },
 ]
 
+
 DATABASES = {
     'default': {
-        'ENGINE': config(
-            'DB_ENGINE', default='django.db.backends.postgresql'),
-        'NAME': config(
-            'DB_NAME', default='postgres'),
-        'USER': config(
-            'POSTGRES_USER', default='postgres'),
-        'PASSWORD': config(
-            'POSTGRES_PASSWORD', default='password'),
-        'HOST': config(
-            'DB_HOST', default='db'),
-        'PORT': config(
-            'DB_PORT', default=5432, cast=int)
+        'ENGINE': os.environ.get('DB_ENGINE'),
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),
     }
 }
 
@@ -149,12 +130,3 @@ MEDIA_ROOT = BASE_DIR / MEDIA_URL
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 PASSWORD_RESET_TIMEOUT = 60 * 60
-
-# for review
-if REVIEW:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': str(BASE_DIR / 'db.sqlite3'),
-        }
-    }
