@@ -28,7 +28,6 @@ INSTALLED_APPS = [
     'djoser',
     'django_filters',
     'corsheaders',
-    'django_extensions',
 ]
 
 
