@@ -1,11 +1,10 @@
 import os
-from pathlib import Path
 
 DEBUG = False
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 ALLOWED_HOSTS = ['*']
 
@@ -27,7 +26,6 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'djoser',
     'django_filters',
-    'corsheaders',
 ]
 
 
@@ -61,12 +59,12 @@ TEMPLATES = [
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get('DB_ENGINE'),
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('DB_PORT'),
+        'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.postgresql'),
+        'NAME': os.getenv('DB_NAME', default='postgres'),
+        'USER': os.getenv('POSTGRES_USER', default='postgres'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='postgres'),
+        'HOST': os.getenv('DB_HOST', default='db'),
+        'PORT': os.getenv('DB_PORT', default='5432')
     }
 }
 
@@ -76,7 +74,6 @@ DATABASES = {
 
 AUTH_USER_MODEL = 'users.User'
 
-N = 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME':
@@ -85,7 +82,7 @@ AUTH_PASSWORD_VALIDATORS = [
      'django.contrib.auth.password_validation.CommonPasswordValidator', },
     {'NAME':
      'django.contrib.auth.password_validation.NumericPasswordValidator', },
-    {'NAME': N, },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', },
 ]
 
 REST_FRAMEWORK = {
