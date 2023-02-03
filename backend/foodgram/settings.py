@@ -57,9 +57,12 @@ TEMPLATES = [
 ]
 
 
+N = 'django.db.backends.postgresql'
+
+
 DATABASES = {
     'default': {
-        'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.postgresql'),
+        'ENGINE': os.getenv('DB_ENGINE', default=N),
         'NAME': os.getenv('DB_NAME', default='postgres'),
         'USER': os.getenv('POSTGRES_USER', default='postgres'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='postgres'),
@@ -75,6 +78,9 @@ DATABASES = {
 AUTH_USER_MODEL = 'users.User'
 
 
+N = 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'
+
+
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME':
      'django.contrib.auth.password_validation.MinimumLengthValidator', },
@@ -82,7 +88,7 @@ AUTH_PASSWORD_VALIDATORS = [
      'django.contrib.auth.password_validation.CommonPasswordValidator', },
     {'NAME':
      'django.contrib.auth.password_validation.NumericPasswordValidator', },
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', },
+    {'NAME': N, },
 ]
 
 REST_FRAMEWORK = {
