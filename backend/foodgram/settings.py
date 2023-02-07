@@ -6,16 +6,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', '158.160.9.139', 'textyourrecipe.sytes.net']
 
 ROOT_URLCONF = 'foodgram.urls'
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
 INSTALLED_APPS = [
-    'api',
-    'users',
-    'recipes',
+    'api.apps.ApiConfig',
+    'users.apps.UsersConfig',
+    'recipes.apps.RecipesConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -26,10 +26,12 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'djoser',
     'django_filters',
+    'corsheaders',
 ]
 
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddlewere',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -66,7 +68,7 @@ DATABASES = {
         'NAME': os.getenv('DB_NAME', default='postgres'),
         'USER': os.getenv('POSTGRES_USER', default='postgres'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='postgres'),
-        'HOST': os.getenv('DB_HOST', default='db'),
+        'HOST': os.getenv('DB_HOST', default='textyourrecipe.sytes.net'),
         'PORT': os.getenv('DB_PORT', default='5432')
     }
 }
