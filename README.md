@@ -24,8 +24,7 @@
 http://textyourrecipe.sytes.net:8001/
 
 
-### To deploy this project need the next actions:
-- Download project with SSH
+### Как скачать проект:
 ```
 git clone git@github.com:CapitainFan/foodgram-project-react.git
 ```
