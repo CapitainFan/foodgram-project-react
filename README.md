@@ -21,7 +21,7 @@
 - Gunicorn - https://docs.gunicorn.org/
 
 ### Ссылка на мой проект
-http://textyourrecipe.sytes.net:8001/
+http://textyourrecipe.sytes.net/
 
 
 ### Как скачать проект:
