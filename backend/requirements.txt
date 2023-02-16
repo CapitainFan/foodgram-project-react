@@ -18,5 +18,5 @@ pytest==6.2.4
 pytest-django==4.4.0
 pytest-pythonpath==0.7.3
 Pillow==9.3.0
-psycopg2-binary==2.8.6
+psycopg2-binary==2.9.3
 flake8
