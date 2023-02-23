@@ -13,9 +13,8 @@ services:
     image: sokolnikovbogdan/foodgram_back:latest
     restart: always
     volumes:
-      - data_value:/data/
-      - static_value:/static/
-      - media_value:/media/
+      - static_value:/app/static/
+      - media_value:/app/media/
     depends_on:
       - db
     env_file:
@@ -47,4 +46,3 @@ volumes:
   postgres_data:
   static_value:
   media_value:
-  data_value:
