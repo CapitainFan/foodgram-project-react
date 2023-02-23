@@ -11,6 +11,7 @@ services:
 
   backend:
     image: sokolnikovbogdan/foodgram_back:latest
+    build: ../backend
     restart: always
     volumes:
       - static_value:/app/static/
@@ -19,6 +20,8 @@ services:
       - db
     env_file:
       - ./.env
+    command: >
+      bash -c "python manage.py migrate && python manage.py collectstatic --no-input && gunicorn --bind 0:8000 foodgram.wsgi:application"
 
   frontend:
     image: sokolnikovbogdan/foodgram_front:latest
