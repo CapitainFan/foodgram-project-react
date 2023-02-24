@@ -11,7 +11,7 @@ services:
 
   backend:
     image: sokolnikovbogdan/foodgram_back:latest
-    build: ../backend
+#    build: ../backend
     restart: always
     volumes:
       - static_value:/app/static/
