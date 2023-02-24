@@ -8,7 +8,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 ALLOWED_HOSTS = [
     '127.0.0.1', 'localhost',
-    '51.250.111.99', 'textyourrecipe.sytes.net',
+    '84.201.163.149', 'textyourrecipe.sytes.net',
     'backend'
 ]
 
