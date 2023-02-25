@@ -11,6 +11,7 @@ from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from foodgram.config import ACTION_METHODS, DATE_TIME_FORMAT
 from recipes.models import AmountIngredient, Ingredient, Recipe, Tag
+from users.models import User
 
 from .filters import AuthorAndTagFilter, IngredientFilter
 from .mixins import AddDelViewMixin
@@ -18,7 +19,7 @@ from .paginators import PageLimitPagination
 from .permissions import AdminOrReadOnly, AuthorStaffOrReadOnly
 from .serializers import (IngredientSerializer, RecipeSerializer,
                           ShortRecipeSerializer, TagSerializer,
-                          UserSubscribeSerializer)
+                          UserSubscribeSerializer, UserSerializer)
 
 User = get_user_model()
 
@@ -38,24 +39,27 @@ class IngredientViewSet(ReadOnlyModelViewSet):
 
 
 class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
     pagination_class = PageLimitPagination
-    add_serializer = UserSubscribeSerializer
+    serializer_class = UserSubscribeSerializer
+#    add_serializer = UserSubscribeSerializer
 
-    @action(methods=ACTION_METHODS, detail=True,)
-    def subscribe(self, request, id):
-        return self.add_del_obj(id, 'subscribe')
-
-    @action(methods=('get',), detail=False)
-    def subscriptions(self, request):
-        user = self.request.user
-        if user.is_anonymous:
-            return Response(status=HTTP_401_UNAUTHORIZED)
-        authors = user.subscribe.all()
-        pages = self.paginate_queryset(authors)
-        serializer = UserSubscribeSerializer(
-            pages, many=True, context={'request': request}
-        )
-        return self.get_paginated_response(serializer.data)
+#    @action(methods=ACTION_METHODS, detail=True,)
+#    def subscribe(self, request, id):
+#        return self.add_del_obj(id, 'subscribe')
+#
+#    @action(methods=('get',), detail=False)
+#    def subscriptions(self, request):
+#        user = self.request.user
+#        if user.is_anonymous:
+#            return Response(status=HTTP_401_UNAUTHORIZED)
+#        authors = user.subscribe.all()
+#        pages = self.paginate_queryset(authors)
+#        serializer = UserSubscribeSerializer(
+#            pages, many=True, context={'request': request}
+#        )
+#        return self.get_paginated_response(serializer.data)
 
 
 class RecipeViewSet(ModelViewSet, AddDelViewMixin):
